@@ -3,7 +3,6 @@ from tqdm import tqdm
 import progressbar
 from urllib.request import urlretrieve
 import zipfile
-from torchvision import transforms
 import matplotlib.pyplot as plt
 
 pbar = None
@@ -43,9 +42,3 @@ def RetrieveData(URL, rootpath="./data"):
                     Zip.extract(member, rootpath)
                 except zipfile.error as e:
                     pass
-
-                
-                
-def show_images(img):
-    plt.imshow(transforms.functional.to_pil_image(img))
-    plt.show()
