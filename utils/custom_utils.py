@@ -6,6 +6,7 @@ import progressbar
 from urllib.request import urlretrieve
 import zipfile
 import matplotlib.pyplot as plt
+import numpy as np
 
 pbar = None
 
@@ -46,7 +47,7 @@ def RetrieveData(URL, rootpath="./data"):
                     pass
                 
 def new_dataset():
-    if os.isdir('./data/new_data')==False:
+    if os.path.isdir('./data/new_data')==False:
         path='./data/Savary_training_set_lenses/'# path of the data directory
 
         ### directories for different type of files
@@ -63,7 +64,7 @@ def new_dataset():
         files_rms=os.listdir(path+RMS)
         files_psf=os.listdir(path+PSF)
 
-        data=[file for file in files_lensed if (file in files_non_lensed and file in files_lensed_source and file in files_rms and file in files_psf)]
+        data=[file for file in tqdm(files_lensed, desc='Checking all available files') if (file in files_non_lensed and file in files_lensed_source and file in files_rms and file in files_psf)]
     
         os.mkdir('./data/new_data')
         os.mkdir('./data/new_data/lensed')
@@ -73,14 +74,14 @@ def new_dataset():
         os.mkdir('./data/new_data/lensed/PSF')
         os.mkdir('./data/new_data/non_lensed/PSF')
         
-        for file in data: #copy of the good files in the new dataset
+        for file in tqdm(data,desc='copying files'): #copy of the good files in the new dataset
             copy(os.path.join(path,non_lensed,file),os.path.join('./data/new_data/non_lensed',file))
             copy(os.path.join(path,lensed,file),os.path.join('./data/new_data/lensed',file))
             copy(os.path.join(path,PSF,file),os.path.join('./data/new_data/non_lensed/PSF',file))
             copy(os.path.join(path,PSF,file),os.path.join('./data/new_data/lensed/PSF',file))
             copy(os.path.join(path,RMS,file),os.path.join('./data/new_data/non_lensed/RMS',file))
             
-        for file in data:#reconstruction of the rms for the lensed files
+        for file in tqdm(data, desc='Reconstructing RMS'):#reconstruction of the rms for the lensed files
             source_path=os.path.join(path,lensed_source,file)
             rms_path=os.path.join(path,RMS,file)
             lrg_path=os.path.join(path,non_lensed,file)
