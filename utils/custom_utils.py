@@ -91,9 +91,9 @@ def new_dataset():
             lrg,lrg_header=fits.getdata(lrg_path,header=True)
     
             gain=lrg_header['GAIN']
-            source_rms=source/gain
+            source_ms=source/gain
     
-            total_rms=np.sqrt(rms**2+source_rms)
+            total_rms=np.sqrt(rms**2+source_ms)
     
             hdu = fits.PrimaryHDU(total_rms, header=rms_header)
             hdu.writeto(os.path.join('./data/new_data/lensed/RMS',file),overwrite=True)
